@@ -1,0 +1,9 @@
+The Linux Auditing System is a native feature to the Linux kernel that collects certain types of system activity to facilitate incident investigation. In this post, we will cover what it is as well as how people deploy and manage it. We will also discuss its strengths — namely it being offered for the delicious price of “free” — and its weaknesses, including excessive overhead, lack of granularity, missing container support, onerous output, and bugginess. 
+
+You are more likely to have heard the term “AuditD” before, rather than the rather prolix “Linux Auditing System.” So, where does AuditD fit in? The audit system’s components include kernel code to hook syscalls, plus a userland daemon that logs syscall events. This userland daemon component is auditd, and because it is the default admin interface to the kernel subsystem, people use “auditd” as a colloquial reference to the whole audit system.
+
+The Linux Auditing subsystem is capable of monitoring three distinct things:
+
+System calls: See which system calls were called, along with contextual information like the arguments passed to it, user information, and more.
+File access: This is an alternative way to monitor file access activity, rather than directly monitoring the open system call and related calls. 
+Select, pre-configured auditable events within the kernel: Red Hat maintains a list of these types of events.
