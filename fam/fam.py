@@ -15,7 +15,7 @@ def run_audit(pathname, search, report, refine):
         
 
 def write_to_db(record):
-    # print(f"Record:  {record}")
+    print(f"Record:  {record}")
     data = []   
     # parse to proper format and append to data list
     data.append(parse_date(record[1], record[2]))
@@ -40,8 +40,9 @@ def read_audit_log(pathname, search, report, refine):
 
 
 def parse_date(datestr, timestr):
-    date = datestr.replace('/','-')
-    date += ' ' + timestr
-    t = datetime.strptime(date, '%d-%m-%Y %H:%M:%S')
+    # date = datestr.replace('/','-')
+    datestr += ' ' + timestr
+    print(f"Date: {datestr}")
+    t = datetime.strptime(datestr, '%m/%d/%Y %H:%M:%S')
     return t.strftime('%Y-%m-%d %H:%M:%S')
 
