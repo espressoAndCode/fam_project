@@ -1,17 +1,18 @@
-from fam import Fam
+
+import fam
 import hash
 import db_conn
+import policy as p
 
 
 def main():
-    # filename = "test_watch"
-    # watch1 = Fam(filename)
-    # print(watch1.read_audit())
+    filename = "test_watch"
+    fam.run_audit(filename, p.search['withkey'], p.report['files'], p.refine['rem_xattr'] )
 
     # hashfile = "testfile.txt"
     # print(hash.get_hash(hashfile))
 
-    db_conn.connect()
+    # db_conn.read_data()
 
 
 
