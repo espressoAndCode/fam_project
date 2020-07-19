@@ -23,3 +23,11 @@ import policy as p
 def test():
     print ("Running File Access Monitor\n")
     return
+
+def fam_main():
+    run_ui = True
+    while run_ui:
+        pfold = input("Please enter the path to the parent folder: ")
+        print(f"\nSelection is: {pfold}")
+
+        return

@@ -24,17 +24,17 @@ def main():
             print("Please enter a valid selection\n")
 
 def create_watch():
-    watchmeth.test()
+    watchmeth.watch_main()
     return
 
 
 def run_fam():
-    fammeth.test()
+    fammeth.fam_main()
     return
 
 
 def det_anom():
-    anommeth.test()
+    anommeth.anom_main()
     return
 
 

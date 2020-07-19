@@ -11,3 +11,12 @@
 def test():
     print ("Detecting anomalies\n")
     return
+
+
+def anom_main():
+    run_ui = True
+    while run_ui:
+        pfold = input("Please enter the path to the parent folder: ")
+        print(f"\nSelection is: {pfold}")
+
+        return
