@@ -1,43 +1,41 @@
-
-import fam
-import hash
-import db_conn
-import policy as p
+import anommeth, watchmeth, fammeth 
 
 
 def main():
-    filename = "test_watch"
-    fam.run_audit(filename, p.search['withkey'], p.report['files'], p.refine['rem_xattr'] )
+    run_ui = True
+    while run_ui:
+        print("1. Create a watch path")
+        print("2. Run File Access Monitor")
+        print("3. Detect anomalies")
+        print("9. Exit")
+        ipt = input("Please enter a numeric selection: ")
+        print(f"\nSelection is: {ipt}")
 
-    # hashfile = "testfile.txt"
-    # print(hash.get_hash(hashfile))
+        if ipt == "1":
+            create_watch()
+        elif ipt == "2":
+            run_fam()
+        elif ipt == "3":
+            det_anom()
+        elif ipt == "9":
+            print("Exiting\n")
+            run_ui = False
+        else:
+            print("Please enter a valid selection\n")
 
-    # db_conn.read_data()
-
-
-    # UI options:
-    # 1. Create a watch path
-    #     a. Choose parent folder
-    #     b. Add flags
-    #     c. Add approved users
-    # 2. Run File Access Monitor
-    #     a. Select watch definition
-    #     b. Audit all files in watch
-    #         i. Write audit data to DB
-    #     c. Checksum all files in watch 
-    #         i. Write checksum data to DB 
-    # 3. Detect anomalies 
-    #     a. Select watch definition
-    #     b. Detect illegal access
-    #         i.   Read all approved users for selected watch
-    #         ii.  Read all items in DB for selected watch 
-    #         iii. Compare and flag access by unapproved users
-    #         iv.  Display data to user
-    #     c. Detect unauthorized file modification
-    #         i.   TBD
+def create_watch():
+    watchmeth.test()
+    return
 
 
+def run_fam():
+    fammeth.test()
+    return
 
+
+def det_anom():
+    anommeth.test()
+    return
 
 
 if __name__ == '__main__':
