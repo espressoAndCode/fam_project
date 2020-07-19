@@ -1,7 +1,7 @@
-import hash
 import db_conn
 import policy as p
 import subprocess
+import checksum
 from datetime import datetime
 
 
@@ -25,18 +25,13 @@ def fam_main():
         filepath = watchlist[int(sel) - 1][1]
         run_ui = False
 
-#     b. Audit all files in watch
-#         i. Write audit data to DB
-    filename = watchname
-    run_audit(filename, p.search['withkey'], p.report['files'], p.refine['rem_xattr'] )
-#     c. Checksum all files in watch 
-#         i. Write checksum data to DB 
+    # Audit all files in watch path and write audit data to DB
 
+    run_audit(watchname, p.search['withkey'], p.report['files'], p.refine['rem_xattr'] )
 
-    # hashfile = "testfile.txt"
-    # print(hash.get_hash(hashfile))
-
-
+    # Checksum all files in watch path and write checksum data to DB 
+    hashes = checksum.walk(filepath)
+    db_conn.create_filestate(hashes)
 
     return
 
@@ -53,7 +48,6 @@ def run_audit(pathname, search, report, refine):
         
 
 def write_to_db(record):
-    print(f"Record:  {record}")
     data = []   
     # parse to proper format and append to data list
     data.append(parse_date(record[1], record[2]))
@@ -78,9 +72,6 @@ def read_audit_log(pathname, search, report, refine):
 
 
 def parse_date(datestr, timestr):
-    # date = datestr.replace('/','-')
     datestr += ' ' + timestr
-    print(f"Date: {datestr}")
     t = datetime.strptime(datestr, '%m/%d/%Y %H:%M:%S')
     return t.strftime('%Y-%m-%d %H:%M:%S')
-
