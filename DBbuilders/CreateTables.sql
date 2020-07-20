@@ -12,7 +12,8 @@ CREATE TABLE EVENTLOG
     Syscall         VARCHAR(64)         NOT NULL,
     Success         INT                 NOT NULL,
     Exe             VARCHAR(255)        NOT NULL,
-    Auid            VARCHAR(64)         NOT NULL          
+    Auid            VARCHAR(64)         NOT NULL,
+    Watchname       VARCHAR(64)         NOT NULL          
 );
 
 CREATE TABLE WATCHES

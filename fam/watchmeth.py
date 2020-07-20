@@ -1,4 +1,5 @@
 import db_conn
+import subprocess
 
 
 def test():
@@ -37,8 +38,21 @@ def watch_main():
     # write files to DB
     db_conn.create_watch(watchname, pfold)
     db_conn.create_users(users)
+    success = audit_init(watchname, pfold)
+
+    if success == 0:
+        print(f"Watch process {watchname} is now running.")
+    else:
+        print(f"There was a problem, {watchname} is NOT running.")
 
     return
 
 
 #####DON'T FORGET TO ADD THE WATCH TO AUDITD!!!!!!!
+def audit_init(watchname, pfold):
+    cmd = ['sudo', 'auditctl', '-w', pfold, '-k', watchname]
+    print(f"cmd = {cmd}")
+    p1 = subprocess.run(cmd)
+
+    return p1.returncode
+

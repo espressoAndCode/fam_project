@@ -26,8 +26,11 @@ def fam_main():
         run_ui = False
 
     # Audit all files in watch path and write audit data to DB
+    newest = db_conn.get_latest_time(watchname)
 
-    run_audit(watchname, p.search['withkey'], p.report['files'], p.refine['rem_xattr'] )
+    print(f"Newest: {newest}")
+
+    run_audit(watchname, newest, p.search['withkey'], p.report['files'], p.refine['rem_xattr'] )
 
     # Checksum all files in watch path and write checksum data to DB 
     hashes = checksum.walk(filepath)
@@ -36,22 +39,27 @@ def fam_main():
     return
 
 
-def run_audit(pathname, search, report, refine):
-    raw_log = read_audit_log(pathname, search, report, refine)
+def run_audit(key, newest, search, report, refine):
+    raw_log = read_audit_log(key, search, report, refine)
     text_log = raw_log.stdout.decode()
     text_log = text_log.splitlines()
 
     for line in text_log:
         splitline = line.split()
-        if len(splitline) == 9 and splitline[0] != '#':
-            write_to_db(splitline)
+        # print(f"splitline: {splitline}")
+        if len(splitline) == 9 and splitline[0] != '#' and splitline[7].endswith('python3.6') :
+            splitdate = parse_date(splitline[1], splitline[2], 0)
+            if checkdate(splitdate, newest):
+                print("New")
+                write_to_db(splitline, key)
         
 
-def write_to_db(record):
+def write_to_db(record, key):
     data = []   
     # parse to proper format and append to data list
-    data.append(parse_date(record[1], record[2]))
+    data.append(parse_date(record[1], record[2], 1))
     data.extend(record[3:8])
+    data.append(key)
 
     # Convert yes/no to 1/0
     if data[3] == 'yes':
@@ -63,15 +71,31 @@ def write_to_db(record):
     db_conn.create_data(data)
 
 
-def read_audit_log(pathname, search, report, refine):
-    search.append(pathname)
+def read_audit_log(key, search, report, refine):
+    search.append(key)
+    print("search")
+    print(search)
     p1 = subprocess.run(search, stdout=subprocess.PIPE)
     p2 = subprocess.run(report, input=p1.stdout, stdout=subprocess.PIPE)
     p3 = subprocess.run(refine, input=p2.stdout, stdout=subprocess.PIPE)
     return p3
 
 
-def parse_date(datestr, timestr):
+def parse_date(datestr, timestr, flag):
     datestr += ' ' + timestr
     t = datetime.strptime(datestr, '%m/%d/%Y %H:%M:%S')
-    return t.strftime('%Y-%m-%d %H:%M:%S')
+    if flag == 0:
+        return t
+    else:
+        return t.strftime('%Y-%m-%d %H:%M:%S')
+
+def checkdate(datea, dateb):
+    print(f"DateA: {type(datea)}")
+    print(f"DateB: {type(dateb)}")
+
+
+    if datea > dateb:
+        return True
+    else:
+        return False
+
