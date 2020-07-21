@@ -34,8 +34,6 @@ def fam_main():
 
     print(f"Newest: {newest}")
 
-    print(f"P.SEARCH: {p.search['withkey']}")
-
     run_audit(watchname, newest, p.search['withkey'], p.report['files'], p.refine['rem_xattr'] )
 
     # Checksum all files in watch path and write checksum data to DB 
@@ -46,11 +44,11 @@ def fam_main():
 
 
 def run_audit(key, newest, search, report, refine):
-    print(f"SEARCH: {search}")
+
     raw_log = read_audit_log(key, search, report, refine)
     text_log = raw_log.stdout.decode()
     text_log = text_log.splitlines()
-
+    print("\nWriting Audit Logs to Database\n")
     for line in text_log:
         splitline = line.split()
        
@@ -82,7 +80,7 @@ def write_to_db(record, key):
 
 
 def read_audit_log(key, search, report, refine):
-    print(f"key: {key}, search: {search}, report: {report}, refine: {refine}")
+    print("\nReading Audit Logs\n")
     s = copy.deepcopy(search)
     s.append(key)
     # print("search")

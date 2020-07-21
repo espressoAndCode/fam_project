@@ -77,7 +77,6 @@ def get_latest_time(key):
     cursor = cnx.cursor() 
 
     query = "SELECT * FROM EVENTLOG WHERE Watchname = '" + key + "' ORDER BY Timecode DESC LIMIT 1"
-    print(f"QUERY: {query}")
     cursor.execute(query)
     res = cursor.fetchall()
     cnx.close() 

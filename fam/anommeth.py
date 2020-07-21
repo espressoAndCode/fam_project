@@ -1,12 +1,3 @@
-    # 3. Detect anomalies 
-    #     a. Select watch definition
-    #     b. Detect illegal access
-    #         i.   Read all approved users for selected watch
-    #         ii.  Read all items in DB for selected watch 
-    #         iii. Compare and flag access by unapproved users
-    #         iv.  Display data to user
-    #     c. Detect unauthorized file modification
-    #         i.   TBD
 import db_conn
 
 def anom_main():
@@ -14,7 +5,6 @@ def anom_main():
     run_ui = True
     watchname = ""
      
-
 
     # Get all watches from DB
     watchlist = db_conn.get_watches()
@@ -32,8 +22,36 @@ def anom_main():
         run_ui = False
 
     print(f"Watch selected: {watchname}")
-    print("Performing database query.")
+    print("Performing database query.\n")
     logs = db_conn.read_data(watchname)
-    print(f"Logs: {logs}")
 
+    unauth = parse_logs_unauth(logs)
+
+    if len(unauth) == 0:
+        print("\nNo unauthorized file access detected")
+    else:
+        print("\nUnauthorized File Access")
+        print("---------------------------\n")
+        for item in unauth:
+            if item[3] == 1:
+                print(f"User: {item[5]} SUCCESSFULLY ACCESSED {item[1]} at {item[0].strftime('%Y-%m-%d %H:%M:%S')}.")
+            else:
+                print(f"User: {item[5]} FAILED TO ACCESS {item[1]} at {item[0].strftime('%Y-%m-%d %H:%M:%S')}.")
     return
+
+
+def parse_logs_unauth(logs):
+    auth_users = []
+    unauth_events = []
+    # changed_files = []
+
+    print("The authorized users are:\n")
+    for user in logs['users']:
+        print(user[0])
+        auth_users.append(user[0])
+
+    for event in logs['events']:
+        if event[5] not in auth_users:
+            unauth_events.append(event)
+
+    return unauth_events
