@@ -13,6 +13,7 @@ def anom_main():
     # Run File Access Monitor
     run_ui = True
     watchname = ""
+     
 
 
     # Get all watches from DB
@@ -31,5 +32,8 @@ def anom_main():
         run_ui = False
 
     print(f"Watch selected: {watchname}")
+    print("Performing database query.")
+    logs = db_conn.read_data(watchname)
+    print(f"Logs: {logs}")
 
     return

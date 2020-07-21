@@ -39,7 +39,7 @@ def fam_main():
     run_audit(watchname, newest, p.search['withkey'], p.report['files'], p.refine['rem_xattr'] )
 
     # Checksum all files in watch path and write checksum data to DB 
-    hashes = checksum.walk(filepath)
+    hashes = checksum.walk(filepath, watchname)
     db_conn.create_filestate(hashes)
 
     return

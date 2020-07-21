@@ -2,13 +2,13 @@ import os, hashlib
 from datetime import datetime
 
 
-def walk(pathname):
+def walk(pathname, watchname):
     hashes = []
     for dirpath, dirs, files in os.walk(pathname):	
         for filename in files:
             fname = os.path.join(dirpath,filename)
             hash = get_hash(fname)
-            hashes.append((fname, hash, get_time()))
+            hashes.append((fname, hash, watchname, get_time()))
     return hashes
 
 

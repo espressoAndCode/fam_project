@@ -25,21 +25,47 @@ def get_watches():
     return watches
 
 
-def read_data():
+def read_data(key):
+    result = {
+        'users':    [],
+        'events':     [],
+        'hashes':   []
+    }
+    
     cnx = mysql.connector.connect( 
                         host = os.getenv('FAM_HOST'), 
                         user = os.getenv('FAM_USER'), 
                         passwd = os.getenv('FAM_PASS'), 
                         database = os.getenv('FAM_DB') ) 
     cursor = cnx.cursor() 
-    query = "SELECT * FROM FILESTATE"
+
+    # Get auth users
+    query = "SELECT Userid FROM AUTHORIZED WHERE Watchname = '" + key + "'"
     cursor.execute(query)
     res = cursor.fetchall()
-
     for item in res:
-        print(item)
+        result['users'].append(item)
+
+    # Get auth users
+    query = "SELECT * FROM EVENTLOG WHERE Watchname = '" + key + "'"
+    cursor.execute(query)
+    res = cursor.fetchall()
+    for item in res:
+        result['events'].append(item)
+
+    # Get auth users
+    query = "SELECT * FROM FILESTATE WHERE Watchname = '" + key + "'"
+    cursor.execute(query)
+    res = cursor.fetchall()
+    for item in res:
+        result['hashes'].append(item)
 
     cnx.close() 
+
+    if len(result['events']) == 0:
+        return None
+    else:
+        return result
 
 
 def get_latest_time(key):
@@ -118,7 +144,7 @@ def create_filestate(records):
                         passwd = os.getenv('FAM_PASS'), 
                         database = os.getenv('FAM_DB') ) 
     cursor = cnx.cursor() 
-    insert_stmt =  "INSERT INTO FILESTATE (Filepath, Hashval, Timecode) VALUES (%s, %s, %s)"
+    insert_stmt =  "INSERT INTO FILESTATE (Filepath, Hashval, Watchname, Timecode) VALUES (%s, %s, %s, %s)"
     cursor.executemany(insert_stmt, records)
 
     cnx.commit()
