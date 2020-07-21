@@ -55,8 +55,10 @@ def get_latest_time(key):
     cursor.execute(query)
     res = cursor.fetchall()
     cnx.close() 
-    print(f"res: {res}")
-    return res[0][0]
+    if len(res) == 0:
+        return None
+    else:
+        return res[0][0]
 
 
 

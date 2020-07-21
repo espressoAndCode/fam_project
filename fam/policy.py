@@ -1,7 +1,7 @@
 
 
 search = {
-    'withkey':      ['ausearch', '-k']
+    'withkey':      ['sudo', 'ausearch', '-k']
 }
 
 report = {

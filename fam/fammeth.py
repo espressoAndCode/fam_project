@@ -2,6 +2,7 @@ import db_conn
 import policy as p
 import subprocess
 import checksum
+import copy
 from datetime import datetime
 
 
@@ -10,6 +11,7 @@ def fam_main():
     run_ui = True
     watchname = ""
     filepath = ""
+
 
     # Get all watches from DB
     watchlist = db_conn.get_watches()
@@ -30,6 +32,8 @@ def fam_main():
 
     print(f"Newest: {newest}")
 
+    print(f"P.SEARCH: {p.search['withkey']}")
+
     run_audit(watchname, newest, p.search['withkey'], p.report['files'], p.refine['rem_xattr'] )
 
     # Checksum all files in watch path and write checksum data to DB 
@@ -40,17 +44,21 @@ def fam_main():
 
 
 def run_audit(key, newest, search, report, refine):
+    print(f"SEARCH: {search}")
     raw_log = read_audit_log(key, search, report, refine)
     text_log = raw_log.stdout.decode()
     text_log = text_log.splitlines()
 
     for line in text_log:
         splitline = line.split()
-        # print(f"splitline: {splitline}")
-        if len(splitline) == 9 and splitline[0] != '#' and splitline[7].endswith('python3.6') :
+       
+        
+        if len(splitline) == 9 and splitline[0] != '#' and splitline[6].endswith('python3.6') == False: 
             splitdate = parse_date(splitline[1], splitline[2], 0)
-            if checkdate(splitdate, newest):
-                print("New")
+            if (newest == None) or (checkdate(splitdate, newest)):
+            # if newest == None:
+                # print("New")
+                print(f"New: {splitline}")
                 write_to_db(splitline, key)
         
 
@@ -72,10 +80,12 @@ def write_to_db(record, key):
 
 
 def read_audit_log(key, search, report, refine):
-    search.append(key)
-    print("search")
-    print(search)
-    p1 = subprocess.run(search, stdout=subprocess.PIPE)
+    print(f"key: {key}, search: {search}, report: {report}, refine: {refine}")
+    s = copy.deepcopy(search)
+    s.append(key)
+    # print("search")
+    # print(search)
+    p1 = subprocess.run(s, stdout=subprocess.PIPE)
     p2 = subprocess.run(report, input=p1.stdout, stdout=subprocess.PIPE)
     p3 = subprocess.run(refine, input=p2.stdout, stdout=subprocess.PIPE)
     return p3
@@ -90,10 +100,6 @@ def parse_date(datestr, timestr, flag):
         return t.strftime('%Y-%m-%d %H:%M:%S')
 
 def checkdate(datea, dateb):
-    print(f"DateA: {type(datea)}")
-    print(f"DateB: {type(dateb)}")
-
-
     if datea > dateb:
         return True
     else:

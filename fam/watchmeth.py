@@ -50,9 +50,11 @@ def watch_main():
 
 #####DON'T FORGET TO ADD THE WATCH TO AUDITD!!!!!!!
 def audit_init(watchname, pfold):
-    cmd = ['sudo', 'auditctl', '-w', pfold, '-k', watchname]
-    print(f"cmd = {cmd}")
-    p1 = subprocess.run(cmd)
+    cmd1 = ['sudo', 'auditctl', '-D']
+    cmd2 = ['sudo', 'auditctl', '-w', pfold, '-k', watchname]
+    print(f"cmd = {cmd2}")
+    subprocess.run(cmd1)
+    p1 = subprocess.run(cmd2)
 
     return p1.returncode
 
