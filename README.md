@@ -1,2 +1,64 @@
 # File Access Monitor
 ## CPSC6240
+
+### Description
+
+The File Access Manager is a program that leverages the Linux `auditd` process to create actionable logs that will assist system administrators in identifying unauthorized file access and modifcation. The process is based on a file system where user authorization is tracked based on file sub-trees. The program allows the admin to whitelist users for file access to any recursive directories or files beneath the specified root. The process is:
+
+1.	Create a file access management watcher for a given sub-tree. This will monitor all file system access below that folder and monitor all file modification through checksum logs.
+
+1.  Assign authorized users for the watcher.
+    
+1.	Run a baseline checksum.
+
+1.	Run the file watcher daemon.
+
+## Setup
+
+This project requires Python3 with the Pip package manager installed. 
+
+### Clone the repo
+
+    $ https://github.com/espressoAndCode/fam_project.git
+
+### Navigate into the project folder
+
+    $ cd fam_project
+
+### Install dependencies
+
+    $ pip install -r requirements.txt
+
+### Database
+
+You will also need a MySql database. DB build source files are located in the `DBbuilders` directory. The access credentials are accessed in the `db_conn.py` file, and you can connect by simply adding the credentials to your `.bashrc` file as environment variables.
+
+    export FAM_HOST="hostname"
+    export FAM_USER="username"
+    export FAM_PASS="DBpassword"
+    export FAM_DB="DBname"
+
+## Operation
+
+To run the program, navigate to the `/fam_project/fam` directory and enter:
+
+    $ python3 main.py
+
+Be sure to follow the prompts, you may be required to enter your `sudo` password during the process.
+
+    1. Create a watch path
+    2. Run File Access Monitor
+    3. Detect anomalies
+
+The segments build on each other. You must first create a watch path, then you can run the File Access Monitor on one of those watches. You only need to create the watch once, and each watch must have a unique name. The watch path is the full path to the top level directory, ie:
+
+    /home/user/dir1/dir2/
+
+In this case, everything in `dir2` and below will be tracked with the watcher. Subsequent runs of the same watcher will only add items to the database that occurred since the last run.
+ 
+ You should run the File Access Monitor for a watch immediately upon creating it in order to get a clean baseline. Any subsequent activity in that file tree will be tracked as long as the watcher is running.
+
+ ## * Watchers do not persist across restarts in this demo implementation.
+
+Once some activity has occurred, you can run the anomaly detector for the watch file. Please note that users are tracked by Auid (audit userID), so if you change user using the `su` command, you will still be tracked by your real user ID. In order to observe the correct operation of the anomaly detector, log out and back in as another user. The actual user ID will then be correctly reflected in the logs.
+
