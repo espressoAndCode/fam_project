@@ -2,10 +2,6 @@ import db_conn
 import subprocess
 
 
-def test():
-    print ("Creating watch path\n")
-    return
-
     # 1. Create a watch path
     #     a. Choose parent folder
     #     b. Add approved users
@@ -17,12 +13,15 @@ def watch_main():
     pfold = ""
     users = []
 
+    print("\nCreate a Watch Definition")
+    print("---------------------------\n")
+
     while run_ui:
         watchname = input("Please enter the watcher name: ")
         print(f"\nSelection is: {watchname}")
 
         pfold = input("Please enter the path to the parent folder: ")
-        print(f"\nSelection is: {pfold}")
+        # print(f"\nSelection is: {pfold}")
 
         while more_users:
             user = input("Please enter a user. Enter q when done: ")
@@ -50,10 +49,10 @@ def watch_main():
 
 #####DON'T FORGET TO ADD THE WATCH TO AUDITD!!!!!!!
 def audit_init(watchname, pfold):
-    cmd1 = ['sudo', 'auditctl', '-D']
+    # cmd1 = ['sudo', 'auditctl', '-D']
     cmd2 = ['sudo', 'auditctl', '-w', pfold, '-k', watchname]
     print(f"cmd = {cmd2}")
-    subprocess.run(cmd1)
+    # subprocess.run(cmd1)
     p1 = subprocess.run(cmd2)
 
     return p1.returncode

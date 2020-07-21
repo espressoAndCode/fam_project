@@ -7,16 +7,29 @@
     #         iv.  Display data to user
     #     c. Detect unauthorized file modification
     #         i.   TBD
-
-def test():
-    print ("Detecting anomalies\n")
-    return
-
+import db_conn
 
 def anom_main():
+    # Run File Access Monitor
     run_ui = True
-    while run_ui:
-        pfold = input("Please enter the path to the parent folder: ")
-        print(f"\nSelection is: {pfold}")
+    watchname = ""
 
-        return
+
+    # Get all watches from DB
+    watchlist = db_conn.get_watches()
+    print("\nDetect Unauthorized Access")
+    print("---------------------------\n")
+
+    # Select watch definition
+    while run_ui:
+        for idx, watch in enumerate(watchlist):
+            print(f"{idx + 1}. {watch[0]}, {watch[1]}")
+        
+        sel = input("Please select a watch definition: ")
+        # print(f"\nSelection is: {watchlist[int(sel) - 1][1]}")
+        watchname = watchlist[int(sel) - 1][0]
+        run_ui = False
+
+    print(f"Watch selected: {watchname}")
+
+    return

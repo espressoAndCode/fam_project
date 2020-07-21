@@ -15,6 +15,8 @@ def fam_main():
 
     # Get all watches from DB
     watchlist = db_conn.get_watches()
+    print("\nUpdate File Access Monitor and Checksums Database")
+    print("---------------------------------------------------\n")
 
     # Select watch definition
     while run_ui:
@@ -22,7 +24,7 @@ def fam_main():
             print(f"{idx + 1}. {watch[0]}, {watch[1]}")
         
         sel = input("Please select a watch definition: ")
-        print(f"\nSelection is: {watchlist[int(sel) - 1][1]}")
+        # print(f"\nSelection is: {watchlist[int(sel) - 1][1]}")
         watchname = watchlist[int(sel) - 1][0]
         filepath = watchlist[int(sel) - 1][1]
         run_ui = False

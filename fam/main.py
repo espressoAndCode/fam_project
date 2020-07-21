@@ -4,12 +4,14 @@ import anommeth, watchmeth, fammeth
 def main():
     run_ui = True
     while run_ui:
+        print("\nMain Menu")
+        print("---------------------------\n")
         print("1. Create a watch path")
         print("2. Run File Access Monitor")
         print("3. Detect anomalies")
         print("9. Exit")
         ipt = input("Please enter a numeric selection: ")
-        print(f"\nSelection is: {ipt}")
+        # print(f"\nSelection is: {ipt}\n")
 
         if ipt == "1":
             create_watch()
