@@ -19,6 +19,7 @@ This project is tested on Ubuntu 18.04. Your mileage may vary on other versions 
 
 ### Install `auditd`
 
+    sudo apt update
     sudo apt install auditd
 
 
