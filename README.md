@@ -15,7 +15,16 @@ The File Access Manager is a program that leverages the Linux `auditd` process t
 
 ## Setup
 
-This project requires Python3 with the Pip package manager installed. 
+This project is tested on Ubuntu 18.04. Your mileage may vary on other versions of Linux. 
+
+### Install `auditd`
+
+    sudo apt install auditd
+
+
+This project requires Python3 with the Pip3 package manager installed. If you aren't already set up, here's a good overview:
+https://www.digitalocean.com/community/tutorials/how-to-install-python-3-and-set-up-a-programming-environment-on-ubuntu-18-04-quickstart
+
 
 ### Clone the repo
 
@@ -27,7 +36,7 @@ This project requires Python3 with the Pip package manager installed.
 
 ### Install dependencies
 
-    $ pip install -r requirements.txt
+    $ pip3 install -r requirements.txt
 
 ### Database
 
