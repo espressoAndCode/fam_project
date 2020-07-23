@@ -41,7 +41,15 @@ https://www.digitalocean.com/community/tutorials/how-to-install-python-3-and-set
 
 ### Database
 
-You will also need a MySql database. DB build source files are located in the `DBbuilders` directory. The access credentials are accessed in the `db_conn.py` file, and you can connect by simply adding the credentials to your `.bashrc` file as environment variables.
+You will also need a MySql database. I used the Clemson Buffet service for a near zero-configuration instance. If you are off campus you will need to connect with the Cisco AnyConnect VPN. Create a MySQL instance and record the credentials.
+
+Database build files are located in the `DBbuilders` directory. You will need to run the CreateTables script. Once you are connected to your MySQL instance, navigate to the `DBbuilders/` directory and run:
+
+    source CreateTables.sql
+
+This will build the tables according to the correct schema.
+
+The File Access Manager program will need to connect to the database as well. Connection credentials are accessed in the `db_conn.py` file, and you can connect by simply adding the credentials to your `.bashrc` file as environment variables using this format:
 
     export FAM_HOST="hostname"
     export FAM_USER="username"
